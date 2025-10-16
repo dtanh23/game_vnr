@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Journey to Revolution - Interactive Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <h1 class="game-title">🎮 JOURNEY TO<br>REVOLUTION</h1>
+            <p class="game-subtitle">Hành trình Nguyễn Ái Quốc 1911-1930</p>
+            <div class="start-buttons">
+                <button class="btn-primary" onclick="startGame()">BẮT ĐẦU HÀNH TRÌNH</button>
+                <button class="btn-secondary" onclick="showInstructions()">HƯỚNG DẪN</button>
+            </div>
+            <div class="start-footer">
+                <p>🎯 Mục tiêu: Thu thập 1250 điểm tri thức</p>
+                <p>🏆 Mở khóa 10 thành tựu lịch sử</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Screen -->
+    <div id="instructions-screen" class="screen">
+        <div class="instructions-content">
+            <h2>📖 HƯỚNG DẪN CHƠI</h2>
+            <div class="instruction-item">
+                <span class="icon">🖱️</span>
+                <p><strong>Click vào địa điểm sáng</strong> để di chuyển nhân vật</p>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">⭐</span>
+                <p><strong>Đến địa điểm</strong> để mở khóa câu chuyện lịch sử</p>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">💡</span>
+                <p><strong>Thu thập điểm tri thức</strong> từ mỗi mốc</p>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">🏆</span>
+                <p><strong>Mở khóa thành tựu</strong> khi hoàn thành mục tiêu</p>
+            </div>
+            <button class="btn-primary" onclick="hideInstructions()">BẮT ĐẦU NGAY</button>
+        </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- Top HUD -->
+        <div class="game-hud">
+            <div class="hud-left">
+                <div class="progress-container">
+                    <label>Tiến Độ Hành Trình</label>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                        <span id="progress-text" class="progress-text">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="points-display">
+                    <span class="label">💡 TRI THỨC</span>
+                    <span id="points-value" class="value">0/1000</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="achievements-display">
+                    <span class="label">🏆 THÀNH TỰU</span>
+                    <span id="achievements-value" class="value">0/10</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas Container -->
+        <div class="game-container">
+            <canvas id="game-canvas"></canvas>
+            
+            <!-- Current Location Info -->
+            <div id="location-info" class="location-info">
+                <span id="current-location">Bấm vào địa điểm để bắt đầu...</span>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="game-controls">
+                <button class="control-btn" onclick="toggleJourneyLog()">📜 Nhật ký</button>
+                <button class="control-btn" onclick="toggleAchievements()">🏆 Thành tựu</button>
+                <button class="control-btn" onclick="toggleSound()">🔊 Âm thanh</button>
+            </div>
+        </div>
+
+        <!-- Journey Log Panel -->
+        <div id="journey-log" class="side-panel">
+            <div class="panel-header">
+                <h3>📜 NHẬT KÝ HÀNH TRÌNH</h3>
+                <button class="close-btn" onclick="toggleJourneyLog()">×</button>
+            </div>
+            <div class="panel-content" id="journey-log-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Achievements Panel -->
+        <div id="achievements-panel" class="side-panel">
+            <div class="panel-header">
+                <h3>🏆 THÀNH TỰU</h3>
+                <button class="close-btn" onclick="toggleAchievements()">×</button>
+            </div>
+            <div class="panel-content" id="achievements-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Modal -->
+    <div id="story-modal" class="modal">
+        <div class="modal-content story-card">
+            <button class="modal-close" onclick="closeStoryModal()">×</button>
+            
+            <!-- Media Section -->
+            <div id="story-media" class="story-media">
+                <img id="story-image" class="story-image" style="display:none;" alt="">
+                <video id="story-video" class="story-video" controls style="display:none;"></video>
+                <audio id="story-audio" class="story-audio" controls style="display:none;"></audio>
+            </div>
+            
+            <div class="story-header">
+                <h2 id="story-title" class="story-title"></h2>
+                <div id="story-year" class="story-year"></div>
+            </div>
+            <div id="story-body" class="story-body"></div>
+            <div id="story-quote" class="story-quote"></div>
+            <div class="story-reward">
+                <div class="reward-item">
+                    <span class="reward-icon">💡</span>
+                    <span id="story-points" class="reward-text">+0 Điểm Tri Thức</span>
+                </div>
+                <div id="story-achievement" class="reward-item" style="display:none;">
+                    <span class="reward-icon">🏆</span>
+                    <span class="reward-text">Thành tựu mới!</span>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="continueJourney()">TIẾP TỤC HÀNH TRÌNH</button>
+        </div>
+    </div>
+
+    <!-- Challenge Modals -->
+    <div id="challenge-modal" class="modal">
+        <div class="modal-content challenge-modal-content">
+            <!-- Quiz Challenge -->
+            <div id="quiz-challenge" class="challenge-container" style="display:none;">
+                <h2 class="challenge-title">📝 THỬ THÁCH LỊCH SỬ!</h2>
+                <p id="quiz-question" class="quiz-question"></p>
+                <div id="quiz-options" class="quiz-options"></div>
+                <div class="challenge-actions">
+                    <button class="btn-hint" onclick="useHint()">💡 GỢI Ý (-20 điểm)</button>
+                    <button class="btn-skip" onclick="skipChallenge()">⏭️ BỎ QUA (50% điểm)</button>
+                </div>
+                <p id="quiz-feedback" class="quiz-feedback"></p>
+            </div>
+
+            <!-- Timeline Challenge -->
+            <div id="timeline-challenge" class="challenge-container" style="display:none;">
+                <h2 class="challenge-title">🔄 SẮP XẾP SỰ KIỆN!</h2>
+                <p id="timeline-question" class="timeline-question"></p>
+                <div id="timeline-events" class="timeline-events"></div>
+                <div class="challenge-actions">
+                    <button class="btn-primary" onclick="checkTimelineOrder()">XÁC NHẬN</button>
+                    <button class="btn-skip" onclick="skipChallenge()">⏭️ BỎ QUA (50% điểm)</button>
+                </div>
+                <p id="timeline-feedback" class="timeline-feedback"></p>
+            </div>
+
+            <!-- Map Challenge -->
+            <div id="map-challenge" class="challenge-container" style="display:none;">
+                <h2 id="map-title" class="challenge-title">🗺️ TÌM ĐỊA ĐIỂM</h2>
+                <div class="map-guide">
+                    <p>🎯 Click vào địa điểm đúng trên bản đồ để trả lời câu hỏi</p>
+                    <p>💡 Cần đúng 4/5 câu để hoàn thành!</p>
+                </div>
+                <div class="map-question-container">
+                    <p id="map-question-number" class="map-question-number">Câu 1/5</p>
+                    <p id="map-question-text" class="map-question-text"></p>
+                </div>
+                <div id="map-container" class="map-container">
+                    <!-- Map pins will be dynamically created here -->
+                </div>
+                <p id="map-feedback" class="map-feedback"></p>
+                <div class="challenge-actions">
+                    <button class="btn-skip" onclick="skipChallenge()">⏭️ BỎ QUA CHALLENGE (50%)</button>
+                </div>
+            </div>
+
+            <!-- Legacy Cards Challenge - FINALE -->
+            <div id="legacy-challenge" class="challenge-container" style="display:none;">
+                <h2 class="challenge-title">🏆 DI SẢN BÁC HỒ!</h2>
+                <div class="legacy-guide">
+                    <p>🎯 Phân loại 10 di sản của Bác vào 3 nhóm đúng</p>
+                    <p>💡 Kéo thẻ vào nhóm phù hợp. Đúng 8/10 = Hoàn thành!</p>
+                </div>
+                <div id="legacy-cards" class="legacy-cards"></div>
+                <div id="legacy-categories" class="legacy-categories"></div>
+                <p id="legacy-feedback" class="legacy-feedback"></p>
+                <div class="challenge-actions">
+                    <button class="btn-primary" onclick="checkLegacyCards()">✅ KIỂM TRA PHÂN LOẠI</button>
+                    <button class="btn-skip" onclick="skipChallenge()">⏭️ BỎ QUA CHALLENGE (50%)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Unlocked Popup -->
+    <div id="achievement-popup" class="achievement-popup">
+        <div class="achievement-content">
+            <div class="achievement-icon">🏆</div>
+            <div class="achievement-text">
+                <div class="achievement-title">THÀNH TỰU MỚI!</div>
+                <div id="achievement-name" class="achievement-name"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Screen -->
+    <div id="victory-screen" class="screen">
+        <div id="victory-flags" class="victory-flags"></div>
+        <div class="victory-content">
+            <h1 class="victory-title">🎉 HOÀN THÀNH!</h1>
+            <p class="victory-subtitle">Đảng Cộng sản Việt Nam ra đời</p>
+            <div class="victory-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Tổng điểm tri thức</span>
+                    <span id="final-points" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Thành tựu đạt được</span>
+                    <span id="final-achievements" class="stat-value">0/10</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Thời gian hoàn thành</span>
+                    <span id="final-time" class="stat-value">0:00</span>
+                </div>
+            </div>
+            <div class="victory-message">
+                <p>"Nguyễn Ái Quốc – Hồ Chí Minh không chỉ tìm ra con đường giải phóng dân tộc, mà còn thắp sáng ngọn đuốc soi đường cho cách mạng Việt Nam suốt thế kỷ XX."</p>
+            </div>
+            <div class="victory-buttons">
+                <button class="btn-primary" onclick="restartGame()">CHƠI LẠI</button>
+                <button class="btn-secondary" onclick="shareResults()">CHIA SẺ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
