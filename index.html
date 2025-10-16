@@ -20,7 +20,7 @@
                 <button class="btn-secondary" onclick="showInstructions()">HƯỚNG DẪN</button>
             </div>
             <div class="start-footer">
-                <p>🎯 Mục tiêu: Thu thập 1250 điểm tri thức</p>
+                <p>🎯 Mục tiêu: Thu thập 1300 điểm tri thức</p>
                 <p>🏆 Mở khóa 10 thành tựu lịch sử</p>
             </div>
         </div>
@@ -30,22 +30,59 @@
     <div id="instructions-screen" class="screen">
         <div class="instructions-content">
             <h2>📖 HƯỚNG DẪN CHƠI</h2>
-            <div class="instruction-item">
-                <span class="icon">🖱️</span>
-                <p><strong>Click vào địa điểm sáng</strong> để di chuyển nhân vật</p>
+            
+            <div class="instruction-section">
+                <h3>🎯 Mục tiêu</h3>
+                <div class="instruction-item">
+                    <span class="icon">🎯</span>
+                    <p>Hoàn thành hành trình 19 năm (1911-1930) qua <strong>11 locations</strong> và vượt qua <strong>10 challenges</strong> để đạt <strong>1300 điểm tri thức</strong>!</p>
+                </div>
             </div>
-            <div class="instruction-item">
-                <span class="icon">⭐</span>
-                <p><strong>Đến địa điểm</strong> để mở khóa câu chuyện lịch sử</p>
+
+            <div class="instruction-section">
+                <h3>🗺️ Di chuyển</h3>
+                <div class="instruction-item">
+                    <span class="icon">🖱️</span>
+                    <p><strong>Click vào địa điểm sáng</strong> trên bản đồ để di chuyển</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="icon">🚶</span>
+                    <p>Nhân vật tự động đi đến → Mở challenge → Đọc lịch sử</p>
+                </div>
             </div>
-            <div class="instruction-item">
-                <span class="icon">💡</span>
-                <p><strong>Thu thập điểm tri thức</strong> từ mỗi mốc</p>
+
+            <div class="instruction-section">
+                <h3>🎮 4 Loại Challenges</h3>
+                <div class="instruction-item">
+                    <span class="icon">📝</span>
+                    <p><strong>Quiz:</strong> Trả lời câu hỏi lịch sử (4 đáp án)</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="icon">🔄</span>
+                    <p><strong>Timeline:</strong> Sắp xếp 3 sự kiện theo thứ tự (kéo thả)</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="icon">🗺️</span>
+                    <p><strong>Map:</strong> Click địa điểm đúng trên bản đồ (5 câu)</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="icon">🏆</span>
+                    <p><strong>Legacy Cards:</strong> Phân loại 10 di sản vào 3 nhóm (finale)</p>
+                </div>
             </div>
-            <div class="instruction-item">
-                <span class="icon">🏆</span>
-                <p><strong>Mở khóa thành tựu</strong> khi hoàn thành mục tiêu</p>
+
+            <div class="instruction-section">
+                <h3>💡 Mẹo chơi</h3>
+                <div class="instruction-item">
+                    <span class="icon">💡</span>
+                    <p>Dùng <strong>GỢI Ý</strong> (-20 điểm) thay vì <strong>BỎ QUA</strong> (-50%)</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="icon">🎯</span>
+                    <p><strong>Map:</strong> Cần 4/5 đúng | <strong>Legacy Cards:</strong> Cần 8/10 đúng</p>
+                </div>
             </div>
+
             <button class="btn-primary" onclick="hideInstructions()">BẮT ĐẦU NGAY</button>
         </div>
     </div>
@@ -66,7 +103,7 @@
             <div class="hud-center">
                 <div class="points-display">
                     <span class="label">💡 TRI THỨC</span>
-                    <span id="points-value" class="value">0/1000</span>
+                    <span id="points-value" class="value">0/1300</span>
                 </div>
             </div>
             <div class="hud-right">

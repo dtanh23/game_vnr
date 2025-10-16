@@ -1,4 +1,4 @@
-# 📚 HƯỚNG DẪN NGÂN HÀNG CÂU HỎI
+# 📚 HƯỚNG DẪN NGÂN HÀNG CÂU HỎI - QUESTION BANK GUIDE
 
 ## 📖 **TỔNG QUAN**
 
@@ -7,46 +7,56 @@ File `questions.js` chứa **ngân hàng câu hỏi** phục vụ cho **TẤT C�
 ### **Cấu trúc:**
 ```
 QUESTION_BANK
-├── QUIZ CHALLENGES (4 pools)
+├── QUIZ CHALLENGES (3 pools)
 │   ├── quiz_ra_di_tim_duong_cuu_nuoc: [5 câu]
 │   ├── quiz_hoat_dong_tai_phap: [5 câu]
-│   ├── quiz_duong_kach_menh: [5 câu]
-│   └── quiz_dang_ra_doi: [5 câu]
+│   └── quiz_duong_kach_menh: [5 câu]
 ├── TIMELINE CHALLENGES (3 pools)
 │   ├── timeline_versailles_tours_thanhnien: [3 sets]
 │   ├── timeline_ba_to_chuc_cong_san: [3 sets]
 │   └── timeline_hoat_dong_cua_nguoi: [3 sets]
-└── DICE CHALLENGES (3 pools)
-    ├── tours_1920 (easy/medium/hard): [5+5+5 = 15 câu]
-    ├── duong_kach_menh_1927 (easy/medium/hard): [5+5+5 = 15 câu]
-    └── dang_ra_doi_1930 (easy/medium/hard): [5+5+5 = 15 câu]
+├── MAP CHALLENGES (3 maps) ✨ NEW!
+│   ├── map_asia_1920s: 5 questions
+│   ├── map_china_1927: 5 questions
+│   └── map_china_1930: 5 questions
+└── LEGACY CARDS FINALE (1 set) ✨ NEW!
+    └── legacy_cards_finale: 3 categories + 10 cards
 ```
 
 **Tổng cộng:**
-- **Quiz:** 20 câu (4 challenges × 5 câu)
+- **Quiz:** 15 câu (3 challenges × 5 câu)
 - **Timeline:** 9 sets (3 challenges × 3 sets)
-- **Dice:** 45 câu (3 challenges × 15 câu)
-- **TỔNG:** 74 items
+- **Map:** 15 questions (3 maps × 5 questions)
+- **Legacy Cards:** 10 cards + 3 categories
+- **TỔNG:** 49 items + metadata structures
 
 ---
 
-## 🎲 **CƠ CHẾ HOẠT ĐỘNG**
+## 🎮 **CƠ CHẾ HOẠT ĐỘNG**
 
-### **1. Tung xúc xắc → Độ khó:**
-- **Tung 1-2** → Easy questions
-- **Tung 3-4** → Medium questions  
-- **Tung 5-6** → Hard questions
+### **1. Quiz Challenge:**
+- Random chọn **1 trong 5 câu** mỗi lần
+- Shuffle thứ tự A/B/C/D
+- Hint system giúp người chơi
 
-### **2. Random selection:**
-Mỗi lần tung xúc xắc, game sẽ **random chọn 1 trong 5 câu** của mỗi độ khó.
+### **2. Timeline Challenge:**
+- Random chọn **1 trong 3 sets** mỗi lần
+- Shuffle thứ tự sự kiện ban đầu
+- Người chơi sắp xếp lại theo thời gian
 
-**Ví dụ:**
-- Lần 1: Tung 5 → Hard → Câu hỏi số 3
-- Lần 2: Tung 5 → Hard → Câu hỏi số 1 (khác lần 1!)
-- Lần 3: Tung 2 → Easy → Câu hỏi số 5
+### **3. Map Challenge:** ✨ NEW!
+- 5 câu hỏi tuần tự (không random)
+- Click vào địa điểm đúng trên bản đồ
+- Cần 4/5 đúng để pass
+- 3 loại maps khác nhau:
+  - World map (châu lục)
+  - China regional map (thành phố TQ)
+  - South China + Vietnam (local)
 
-### **3. Shuffle đáp án:**
-Thứ tự A/B/C/D được xáo trộn mỗi lần để tránh pattern.
+### **4. Legacy Cards Challenge:** ✨ NEW!
+- 10 cards được shuffle random
+- Drag & drop vào 3 categories
+- Cần 8/10 đúng để pass
 
 ---
 
@@ -89,263 +99,731 @@ Thứ tự A/B/C/D được xáo trộn mỗi lần để tránh pattern.
 
 ---
 
-### **3. DICE Challenge Format:**
+### **3. MAP Challenge Format:** ✨ NEW!
 ```javascript
-// Đã có sẵn, không thay đổi
-easy: [
-    {
-        question: 'Câu hỏi dễ?',
-        options: [
-            { text: 'Đáp án đúng', correct: true },
-            { text: 'Đáp án sai 1', correct: false },
-            { text: 'Đáp án sai 2', correct: false }
-        ]
-    }
-]
+{
+    mapTitle: '🗺️ HÀNH TRÌNH CỦA BÁC (1911-1924)',
+    mapType: 'world', // or 'china', 'south_china'
+    requiredCorrect: 4, // Need 4/5 correct
+    locations: [
+        { id: 'vietnam', name: '🇻🇳 Việt Nam', x: 75, y: 65 },
+        { id: 'france', name: '🇫🇷 Pháp', x: 30, y: 25 },
+        // ... more locations
+    ],
+    questions: [
+        {
+            id: 1,
+            question: 'Bác Hồ ra đi tìm đường cứu nước từ đâu năm 1911?',
+            correctLocation: 'vietnam',
+            points: 20
+        },
+        // ... 4 more questions
+    ]
+}
 ```
 **Quy tắc:**
-- **Easy:** 3 options (1 đúng, 2 sai)
-- **Medium/Hard:** 4 options (1 đúng, 3 sai)
-- **Chỉ có 1 đáp án đúng** (correct: true)
+- **5 locations** trên map (pins có thể click)
+- **5 questions** tuần tự
+- **x, y** là % position trên map (0-100%)
+- **requiredCorrect**: Usually 4 (need 4/5 đúng)
+- **correctLocation** phải match với `id` của location
+
+---
+
+### **4. LEGACY CARDS Challenge Format:** ✨ NEW!
+```javascript
+{
+    categories: [
+        {
+            id: 'tu_tuong',
+            icon: '📚',
+            name: 'Tư tưởng & Truyền thông',
+            description: 'Các tác phẩm và hoạt động tuyên truyền'
+        },
+        // ... 2 more categories
+    ],
+    cards: [
+        {
+            id: 1,
+            year: 1919,
+            title: 'Bản yêu sách Versailles',
+            description: 'Yêu cầu quyền tự do cho nhân dân An Nam',
+            category: 'tu_tuong'
+        },
+        // ... 9 more cards
+    ]
+}
+```
+**Quy tắc:**
+- **3 categories** cố định
+- **10 cards** phân bố trong 3 categories
+- **category** của card phải match với `id` của category
+- Cards thường phân bố: 3-4-3 hoặc 3-3-4
 
 ---
 
 ## 🎯 **NỘI DUNG CÁC CHALLENGE**
 
-### **Challenge 1: tours_1920**
-📍 **Chủ đề:** Đại hội Tours 1920 - Gia nhập Quốc tế Cộng sản
+### **QUIZ CHALLENGES**
 
-**Easy (5 câu):**
-1. Đại hội Tours ở nước nào?
-2. Tháng mấy năm 1920?
-3. Nguyễn Ái Quốc đã làm gì?
-4. Trở thành gì sau Đại hội?
-5. Tours ở miền nào Pháp?
+#### **Challenge 1: quiz_ra_di_tim_duong_cuu_nuoc**
+📍 **Location 1 - Paris 1917**
 
-**Medium (5 câu):**
-1. Quốc tế III là gì?
-2. Đại hội thành lập tổ chức nào?
-3. Người đọc tài liệu gì của Lenin?
-4. Người là thành viên đảng nào?
-5. Quốc tế CS thành lập năm nao?
-
-**Hard (5 câu):**
-1. Bao nhiêu điều kiện của Lênin?
-2. Tỷ lệ phiếu tán thành?
-3. Tên tổ chức Người thành lập?
-4. Ai sáng lập Comintern?
-5. Bút danh Người dùng sau Tours?
+**5 câu hỏi:**
+1. Nguyễn Tất Thành rời Việt Nam năm nào?
+2. Bến Nhà Rồng thuộc thành phố nào?
+3. Khi ra đi, Người bao nhiêu tuổi?
+4. Tàu Người đi tên gì?
+5. Mục đích ra đi là gì?
 
 ---
 
-### **Challenge 2: duong_kach_menh_1927**
-📍 **Chủ đề:** Đường Kách mệnh 1927 - Huấn luyện cán bộ
+#### **Challenge 2: quiz_hoat_dong_tai_phap**
+📍 **Location 2 - Versailles 1919**
 
-**Easy (5 câu):**
-1. Xuất bản năm nào?
-2. Tập hợp bài giảng ở đâu?
-3. Quảng Châu thuộc nước nào?
-4. Quảng Châu còn gọi là gì?
-5. Người đến Quảng Châu năm nào?
-
-**Medium (5 câu):**
-1. Viết bằng ngôn ngữ nào?
-2. Mở bao nhiêu khóa huấn luyện?
-3. Tổ chức gì thành lập 1925?
-4. Tạp chí tên gì?
-5. Bút danh khi viết?
-
-**Hard (5 câu):**
-1. Tên đầy đủ lớp huấn luyện?
-2. Bao nhiêu bài giảng?
-3. Con đường cách mạng theo ai?
-4. Bao nhiêu hội viên năm 1927?
-5. Học viên tiêu biểu là ai?
+**5 câu hỏi:**
+1. Người ở Pháp từ năm nào đến năm nào?
+2. Bản yêu sách có bao nhiêu điểm?
+3. Gửi đến hội nghị nào?
+4. Hội nghị Versailles diễn ra năm nào?
+5. Yêu sách đòi quyền gì?
 
 ---
 
-### **Challenge 3: dang_ra_doi_1930**
-📍 **Chủ đề:** Đảng Cộng sản Việt Nam ra đời 1930
+#### **Challenge 3: quiz_duong_kach_menh**
+📍 **Location 7 - Quảng Châu 1927**
 
-**Easy (5 câu):**
-1. Ra đời ngày nào?
-2. 2025 là kỷ niệm bao nhiêu năm?
-3. Thành lập tháng mấy?
-4. Ai chủ trì Hội nghị?
-5. Thế kỷ nào?
+**5 câu hỏi:**
+1. "Đường Kách mệnh" xuất bản năm nào?
+2. Viết bằng ngôn ngữ nào?
+3. Là tập hợp bài giảng ở đâu?
+4. Nội dung chính là gì?
+5. Ý nghĩa của cuốn sách?
 
-**Medium (5 câu):**
-1. Thành lập ở đâu?
-2. Địa điểm cụ thể?
-3. Tên ban đầu?
-4. Tháng 10/1930 đổi tên?
-5. Hội nghị kéo dài bao lâu?
+---
 
-**Hard (5 câu):**
-1. Hợp nhất 3 tổ chức nào?
-2. Mục tiêu Cương lĩnh đầu tiên?
-3. Tổng Bí thư đầu tiên?
-4. Tại sao phải hợp nhất?
-5. Văn kiện nào được thông qua?
+### **TIMELINE CHALLENGES**
+
+#### **Challenge 1: timeline_versailles_tours_thanhnien**
+📍 **Location 3 - Tours 1920**
+
+**3 sets, mỗi set 3 sự kiện:**
+
+**Set 1:**
+- Gửi bản yêu sách Versailles (1919)
+- Đại hội Tours (1920)
+- Thành lập Hội Thanh niên (1925)
+
+**Set 2:**
+- Hoạt động tại Pháp (1917)
+- Đại hội Tours (1920)
+- Báo Le Paria (1921)
+
+**Set 3:**
+- Bản yêu sách (1919)
+- Đại hội Tours (1920)
+- Người Cộng sản đầu tiên (1920)
+
+---
+
+#### **Challenge 2: timeline_ba_to_chuc_cong_san**
+📍 **Location 6 - Quảng Châu 1925**
+
+**3 sets về ba tổ chức cộng sản:**
+
+**Set 1:**
+- Đông Dương CS Đảng (6/1929)
+- An Nam CS Đảng (8/1929)
+- Đông Dương CS Liên đoàn (late 1929)
+
+**Set 2:**
+- Hội Thanh niên (1925)
+- Đông Dương CS Đảng (1929)
+- Hợp nhất (1930)
+
+**Set 3:**
+- "Đường Kách mệnh" (1927)
+- Ba tổ chức ra đời (1929)
+- Hội nghị hợp nhất (1930)
+
+---
+
+#### **Challenge 3: timeline_hoat_dong_cua_nguoi**
+📍 **Location 9 - Hương Cảng 1929**
+
+**3 sets về hoạt động của Người:**
+
+**Set 1:**
+- Ra đi (1911)
+- Đại hội Tours (1920)
+- Đảng ra đời (1930)
+
+**Set 2:**
+- Học tập tại Nga (1923)
+- Thành lập Hội Thanh niên (1925)
+- "Đường Kách mệnh" (1927)
+
+**Set 3:**
+- Hoạt động tại Pháp (1917)
+- Tours (1920)
+- Quảng Châu (1924)
+
+---
+
+### **MAP CHALLENGES** ✨ NEW!
+
+#### **Challenge 1: map_asia_1920s**
+📍 **Location 4 - Nga 1923-1924**
+🗺️ **Map Type:** World Map
+
+**5 locations:**
+- 🇻🇳 Việt Nam (75%, 65%)
+- 🇫🇷 Pháp (30%, 25%)
+- 🇷🇺 Nga (55%, 15%)
+- 🇨🇳 Trung Quốc (70%, 35%)
+- 🇺🇸 Mỹ (10%, 30%)
+
+**5 questions:**
+1. Bác Hồ ra đi tìm đường cứu nước từ đâu năm 1911?
+   → **Việt Nam**
+2. Đại hội Tours 1920 diễn ra ở quốc gia nào?
+   → **Pháp**
+3. Bác Hồ đến học tập tại đây năm 1923-1924?
+   → **Nga**
+4. Hội Thanh niên được thành lập ở đâu năm 1925?
+   → **Trung Quốc**
+5. Bác Hồ viết "Bản án chế độ thực dân Pháp" khi sống ở đâu?
+   → **Pháp**
+
+**Pass condition:** 4/5 correct
+
+---
+
+#### **Challenge 2: map_china_1927**
+📍 **Location 8 - Quảng Châu 1927**
+🗺️ **Map Type:** China Regional Map
+
+**5 locations:**
+- 📍 Quảng Châu (35%, 70%)
+- 📍 Thượng Hải (55%, 45%)
+- 📍 Vũ Hán (45%, 50%)
+- 📍 Bắc Kinh (50%, 25%)
+- 📍 Hương Cảng (35%, 80%)
+
+**5 questions:**
+1. Hội Việt Nam Cách mạng Thanh niên được thành lập ở đâu?
+   → **Quảng Châu**
+2. "Đường Kách mệnh" được viết và xuất bản tại đâu?
+   → **Quảng Châu**
+3. Thành phố cảng lớn nhất Trung Quốc, Bác từng hoạt động?
+   → **Thượng Hải**
+4. Lớp huấn luyện cán bộ cách mạng được mở ở đâu?
+   → **Quảng Châu**
+5. Thủ đô Trung Quốc, nơi có nhiều phong trào cách mạng?
+   → **Bắc Kinh**
+
+**Pass condition:** 4/5 correct
+
+---
+
+#### **Challenge 3: map_china_1930**
+📍 **Location 10 - Hương Cảng 1930**
+🗺️ **Map Type:** South China + Vietnam
+
+**5 locations:**
+- 📍 Hương Cảng (50%, 70%)
+- 📍 Quảng Châu (40%, 50%)
+- 📍 Hải Phòng (25%, 65%)
+- 📍 Hà Nội (20%, 60%)
+- 📍 Sài Gòn (30%, 85%)
+
+**5 questions:**
+1. Đảng Cộng sản Việt Nam ra đời ở đâu ngày 3/2/1930?
+   → **Hương Cảng**
+2. Hội nghị hợp nhất ba tổ chức CS diễn ra tại đâu?
+   → **Hương Cảng**
+3. Thành phố cảng quan trọng của miền Bắc Việt Nam?
+   → **Hải Phòng**
+4. Trung tâm phong trào cách mạng miền Nam năm 1930?
+   → **Sài Gòn**
+5. Lớp huấn luyện cán bộ trước đó được tổ chức ở đâu?
+   → **Quảng Châu**
+
+**Pass condition:** 4/5 correct
+
+---
+
+### **LEGACY CARDS CHALLENGE** ✨ NEW!
+
+#### **Finale Challenge: legacy_cards_finale**
+📍 **Location 11 - Ý nghĩa lịch sử**
+
+**3 Categories:**
+
+##### **1. 📚 Tư tưởng & Truyền thông** (3 cards)
+- 1919: Bản yêu sách Versailles
+- 1921: Báo Le Paria
+- 1927: "Đường Kách mệnh"
+
+##### **2. 🏛️ Tổ chức** (4 cards)
+- 1925: Hội Việt Nam Cách mạng Thanh niên
+- 1929: Ba tổ chức Cộng sản
+- 1930: Hội nghị hợp nhất
+- 1930: Đảng Cộng sản Việt Nam
+
+##### **3. 🌍 Hoạt động Quốc tế** (3 cards)
+- 1911: Ra đi tìm đường cứu nước
+- 1917: Hoạt động tại Pháp
+- 1920: Đại hội Tours
+
+**Pass condition:** 8/10 correct (forgiving!)
 
 ---
 
 ## ➕ **CÁCH THÊM CÂU HỎI MỚI**
 
-### **Bước 1: Mở file `questions.js`**
+### **Thêm Quiz Question:**
 
-### **Bước 2: Chọn challenge + difficulty**
-Ví dụ: Thêm câu Easy cho Challenge 1
-
-### **Bước 3: Thêm object mới vào array**
+**Bước 1:** Mở `questions.js`, tìm pool cần thêm
 ```javascript
-tours_1920: {
-    easy: [
-        // ... câu hỏi cũ ...
-        {
-            question: 'Câu hỏi mới của bạn?',
-            options: [
-                { text: 'Đáp án đúng', correct: true },
-                { text: 'Đáp án sai 1', correct: false },
-                { text: 'Đáp án sai 2', correct: false }
-            ]
-        }
-    ]
-}
+quiz_ra_di_tim_duong_cuu_nuoc: [
+    // ... existing questions
+    {
+        question: 'Câu hỏi mới?',
+        options: [
+            { text: 'Đáp án đúng', correct: true },
+            { text: 'Đáp án sai 1', correct: false },
+            { text: 'Đáp án sai 2', correct: false },
+            { text: 'Đáp án sai 3', correct: false }
+        ],
+        hint: 'Gợi ý hữu ích'
+    }
+]
 ```
 
-### **Bước 4: Save và test**
-Refresh game để test câu hỏi mới!
+**Bước 2:** Save và test
+
+---
+
+### **Thêm Timeline Set:**
+
+**Bước 1:** Mở `questions.js`, tìm pool cần thêm
+```javascript
+timeline_versailles_tours_thanhnien: [
+    // ... existing sets
+    {
+        events: [
+            { id: 1, text: 'Sự kiện A', year: 1920, correctOrder: 0 },
+            { id: 2, text: 'Sự kiện B', year: 1925, correctOrder: 1 },
+            { id: 3, text: 'Sự kiện C', year: 1930, correctOrder: 2 }
+        ]
+    }
+]
+```
+
+**Bước 2:** Đảm bảo `correctOrder` đúng (0 = sớm nhất)
+
+---
+
+### **Thêm Map Question:**
+
+**Chú ý:** Map challenges có cấu trúc khác, cần thêm cả location và question!
+
+**Bước 1:** Thêm location pin (nếu chưa có)
+```javascript
+locations: [
+    { id: 'new_location', name: '📍 Địa điểm mới', x: 50, y: 50 },
+    // ... existing locations
+]
+```
+
+**Bước 2:** Thêm question
+```javascript
+questions: [
+    // ... existing questions
+    {
+        id: 6,
+        question: 'Câu hỏi địa lý mới?',
+        correctLocation: 'new_location',
+        points: 20
+    }
+]
+```
+
+**Bước 3:** Cân nhắc tăng `requiredCorrect` nếu có > 5 questions
+
+---
+
+### **Thêm Legacy Card:**
+
+**Bước 1:** Thêm category (nếu cần mới)
+```javascript
+categories: [
+    {
+        id: 'new_category',
+        icon: '🎯',
+        name: 'Category mới',
+        description: 'Mô tả category'
+    },
+    // ... existing categories
+]
+```
+
+**Bước 2:** Thêm card
+```javascript
+cards: [
+    // ... existing cards
+    {
+        id: 11,
+        year: 1930,
+        title: 'Di sản mới',
+        description: 'Mô tả ngắn gọn',
+        category: 'new_category' // Phải match category id
+    }
+]
+```
 
 ---
 
 ## 🔧 **SỬA ĐỔI CÂU HỎI CŨ**
 
-### **Tìm câu hỏi:**
-1. Mở `questions.js`
-2. Tìm theo challenge (tours_1920, duong_kach_menh_1927, dang_ra_doi_1930)
-3. Tìm theo difficulty (easy, medium, hard)
-4. Tìm câu hỏi trong array
+### **Quiz/Timeline:**
+1. Tìm câu hỏi trong array
+2. Sửa `question`, `text`, hoặc `options`
+3. Save và test
 
-### **Sửa nội dung:**
-```javascript
-{
-    question: 'Câu hỏi CŨ cần sửa?', // ← Sửa ở đây
-    options: [
-        { text: 'Đáp án đúng MỚI', correct: true }, // ← Hoặc ở đây
-        { text: 'Đáp án sai', correct: false }
-    ]
-}
-```
+### **Map:**
+1. Tìm question trong `questions` array
+2. Sửa `question` hoặc `correctLocation`
+3. **Nếu sửa location ID**, nhớ update `locations` array
+4. Test trên map để đảm bảo pin đúng vị trí
+
+### **Legacy Cards:**
+1. Tìm card trong `cards` array
+2. Sửa `title`, `description`, hoặc `category`
+3. **Nếu đổi category**, đảm bảo category ID tồn tại
+4. Test drag & drop
 
 ---
 
 ## 🗑️ **XÓA CÂU HỎI**
 
-Chỉ cần xóa object {} trong array:
+### **Quiz/Timeline:**
+Xóa object {} trong array:
 
-**Trước:**
 ```javascript
-easy: [
-    { question: 'Câu 1?', ... },
-    { question: 'Câu 2 - XÓA CÂU NÀY', ... }, // ← Xóa
-    { question: 'Câu 3?', ... }
+// Before
+[
+    { question: 'Câu 1', ... },
+    { question: 'Câu 2 - DELETE THIS', ... }, // ← Xóa
+    { question: 'Câu 3', ... }
+]
+
+// After
+[
+    { question: 'Câu 1', ... },
+    { question: 'Câu 3', ... }
 ]
 ```
 
-**Sau:**
-```javascript
-easy: [
-    { question: 'Câu 1?', ... },
-    { question: 'Câu 3?', ... }
-]
-```
+### **Map:**
+- **Xóa question:** Xóa object trong `questions`
+- **Xóa location:** Xóa trong `locations` + xóa questions dùng location đó
+
+### **Legacy Cards:**
+- **Xóa card:** Xóa object trong `cards`
+- **Xóa category:** Xóa trong `categories` + reassign cards sang category khác
 
 ---
 
 ## ⚠️ **LƯU Ý QUAN TRỌNG**
 
 ### **✅ NÊN:**
-- Mỗi difficulty nên có **ít nhất 3-5 câu** để đa dạng
-- Câu Easy: đơn giản, phổ thông
-- Câu Medium: cần tư duy, kiến thức sâu hơn
-- Câu Hard: chi tiết, kiến thức chuyên sâu
-- Đáp án sai phải hợp lý (không quá vô lý)
+
+#### **Quiz:**
+- Mỗi pool có **ít nhất 3-5 câu** cho đa dạng
+- Hint phải hữu ích, không quá rõ ràng
+- Đáp án sai phải hợp lý (không vô lý)
+
+#### **Timeline:**
+- Mỗi pool có **ít nhất 3 sets** cho random
+- Events phải rõ ràng về thời gian
+- Không chọn events quá gần nhau về năm (khó phân biệt)
+
+#### **Map:**
+- Pins phải **spread out** trên map (không chồng chéo)
+- `x, y` % phải phù hợp với map background
+- Questions phải liên quan đến địa lý
+- Test click area (không quá nhỏ, không quá lớn)
+
+#### **Legacy Cards:**
+- 3 categories phải **mutually exclusive**
+- Mỗi card chỉ thuộc **1 category**
+- Phân bố cards: 3-4-3 hoặc tương đương (balanced)
+- Description ngắn gọn (< 150 chars)
 
 ### **❌ KHÔNG NÊN:**
-- Để array rỗng `easy: []` → Lỗi!
-- Quên dấu phẩy giữa các object
-- Có 2 đáp án đúng trong 1 câu
-- Câu hỏi quá dài (> 150 ký tự)
-- Đáp án quá dài (> 80 ký tự)
+
+#### **Common:**
+- Để array rỗng `[]` → Lỗi!
+- Quên dấu phẩy giữa objects
+- Câu hỏi quá dài (> 150 chars)
+- Đáp án quá dài (> 100 chars)
+
+#### **Map Specific:**
+- Pins ở góc màn hình (khó click)
+- `x, y` < 0 hoặc > 100 (out of bounds)
+- 2 pins có position giống nhau
+- Question không liên quan đến location
+
+#### **Legacy Cards Specific:**
+- Card có thể belong to 2 categories
+- Category ID không match
+- Quá nhiều cards trong 1 category (> 5)
 
 ---
 
 ## 📊 **THỐNG KÊ HIỆN TẠI**
 
 ### **Quiz Challenges:**
-| Challenge | Số câu hỏi | Locations |
-|-----------|------------|-----------|
-| **Ra đi tìm đường cứu nước** | 5 | Location 1 |
-| **Hoạt động tại Pháp** | 5 | Location 2 |
-| **Đường Kách mệnh** | 5 | Location 7 |
-| **Đảng ra đời** | 5 | Location 10 |
-| **TỔNG QUIZ** | **20** | 4 challenges |
+| Pool | Số câu | Location | Pass Points |
+|------|--------|----------|-------------|
+| **Ra đi tìm đường cứu nước** | 5 | 1 | 100 |
+| **Hoạt động tại Pháp** | 5 | 2 | 100 |
+| **Đường Kách mệnh** | 5 | 7 | 100 |
+| **TỔNG QUIZ** | **15** | 3 locations | 300 |
 
 ### **Timeline Challenges:**
-| Challenge | Số sets | Locations |
-|-----------|---------|-----------|
-| **Versailles-Tours-Thanh niên** | 3 | Location 2 |
-| **Ba tổ chức cộng sản** | 3 | Location 5 |
-| **Hoạt động của Người** | 3 | Location 8 |
-| **TỔNG TIMELINE** | **9** | 3 challenges |
+| Pool | Số sets | Location | Pass Points |
+|------|---------|----------|-------------|
+| **Versailles-Tours-Thanh niên** | 3 | 3 | 150 |
+| **Ba tổ chức cộng sản** | 3 | 6 | 150 |
+| **Hoạt động của Người** | 3 | 9 | 200 |
+| **TỔNG TIMELINE** | **9 sets** | 3 locations | 500 |
 
-### **Dice Challenges:**
-| Challenge | Easy | Medium | Hard | Tổng | Locations |
-|-----------|------|--------|------|------|-----------|
-| **Tours 1920** | 5 | 5 | 5 | **15** | Location 3 |
-| **Đường Kách mệnh** | 5 | 5 | 5 | **15** | Location 6 |
-| **Đảng ra đời** | 5 | 5 | 5 | **15** | Location 9 |
-| **TỔNG DICE** | **15** | **15** | **15** | **45** | 3 challenges |
+### **Map Challenges:** ✨ NEW!
+| Map | Type | Pins | Questions | Location | Points |
+|-----|------|------|-----------|----------|--------|
+| **Asia 1920s** | World | 5 | 5 | 4 | 150 |
+| **China 1927** | Regional | 5 | 5 | 8 | 100 |
+| **China 1930** | Local | 5 | 5 | 10 | 200 |
+| **TỔNG MAP** | 3 maps | **15** | **15** | 3 locations | 450 |
+
+### **Legacy Cards:** ✨ NEW!
+| Challenge | Categories | Cards | Location | Points |
+|-----------|------------|-------|----------|--------|
+| **Finale** | 3 | 10 | 11 | 150 |
 
 ---
 
-**TỔNG CẢ 3 LOẠI:** 74 items (20 quiz + 9 timeline sets + 45 dice)
-
----
-
-## 🎯 **KẾT QUẢ**
-
-### **Trước (Version cũ):**
-- ❌ **Quiz:** 4 câu cố định → Chơi lại thấy y chang
-- ❌ **Timeline:** 3 sets cố định → Nhớ thứ tự
-- ❌ **Dice:** 9 câu cố định → Đoán được pattern
-- ❌ Thiếu đa dạng, dễ nhàm chán
-
-### **Sau (Version mới):**
-- ✅ **Quiz:** 20 câu (5 câu/challenge) → Mỗi lần khác nhau
-- ✅ **Timeline:** 9 sets (3 sets/challenge) → Random thứ tự
-- ✅ **Dice:** 45 câu (15 câu/challenge) → Phong phú
-- ✅ **Shuffle đáp án:** A/B/C/D random mỗi lần
-- ✅ **Random selection:** Không bao giờ thấy 2 lần giống nhau
-- ✅ **Dễ quản lý:** Tách file riêng, dễ thêm/sửa/xóa
-- ✅ **Scalable:** Dễ mở rộng thêm challenges mới
-- ✅ **Clean code:** Tách data khỏi logic
+**GRAND TOTAL:**
+- **Quiz:** 15 questions
+- **Timeline:** 9 sets (27 events)
+- **Map:** 15 questions (on 3 maps)
+- **Legacy Cards:** 10 cards + 3 categories
+- **TỔNG ITEMS:** 49 questions/sets/cards
+- **MAX POINTS:** 1300
 
 ---
 
 ## 🔗 **FILES LIÊN QUAN**
 
-1. **questions.js** - Ngân hàng câu hỏi (file này) - 74 items
-2. **script.js** - Logic game:
-   - Dòng 7-43: CHALLENGES configs (questionPool keys)
-   - Dòng 417-457: Quiz logic (showQuizChallenge, checkQuizAnswer)
-   - Dòng 500-619: Timeline logic (showTimelineChallenge, checkTimelineOrder)
-   - Dòng 627-746: Dice logic (showDiceChallenge, rollDice, checkDiceAnswer)
-3. **index.html** - Load questions.js trước script.js (dòng 245)
+### **1. questions.js** (This file)
+- Quiz pools: Lines 10-70
+- Timeline pools: Lines 80-200
+- Map pools: Lines 210-380
+- Legacy Cards: Lines 390-470
+
+### **2. script.js** (Game engine)
+- CHALLENGES config: Lines 7-43
+- Quiz logic: Lines 420-480
+- Timeline logic: Lines 510-620
+- Map logic: Lines 630-765
+- Legacy Cards logic: Lines 770-900
+
+### **3. index.html** (UI)
+- Quiz container: Lines 130-145
+- Timeline container: Lines 150-165
+- Map container: Lines 170-185
+- Legacy container: Lines 190-210
+
+### **4. styles.css** (Styling)
+- Quiz styles: Lines 550-650
+- Timeline styles: Lines 660-750
+- Map styles: Lines 610-740
+- Legacy styles: Lines 750-920
 
 ---
 
-**💡 TIP:** Nên tạo backup file `questions.js` trước khi chỉnh sửa nhiều!
+## 💡 **TIPS FOR CONTENT CREATORS**
 
-**📧 Có thắc mắc?** Tham khảo code trong `script.js` function `showDiceQuestion()`
+### **Writing Quiz Questions:**
+1. **Clear and concise:** One concept per question
+2. **Historically accurate:** Verify dates and facts
+3. **Appropriate difficulty:** Match location context
+4. **Good distractors:** Wrong answers should be plausible
+5. **Helpful hints:** Guide without giving away
+
+### **Creating Timeline Sets:**
+1. **Logical grouping:** Related events
+2. **Clear differences:** Easy to distinguish by year
+3. **Educational value:** Teach progression/causation
+4. **Variety:** Mix different types of events
+
+### **Designing Map Challenges:**
+1. **Visual clarity:** Pins easy to see and click
+2. **Geographic logic:** Questions about location
+3. **Balanced difficulty:** Mix easy and hard
+4. **Cultural sensitivity:** Respect historical context
+5. **Testing:** Verify click hitboxes work
+
+### **Building Legacy Cards:**
+1. **Meaningful categories:** Distinct themes
+2. **Balanced distribution:** ~3-4 cards each
+3. **Clear descriptions:** Easy to categorize
+4. **Historical significance:** Important legacies only
+5. **Forgiveness:** 8/10 threshold allows learning
+
+---
+
+## 🎯 **BEST PRACTICES**
+
+### **Before Adding Content:**
+1. ✅ Research historical accuracy
+2. ✅ Check existing questions for duplicates
+3. ✅ Plan difficulty level
+4. ✅ Write clear, concise text
+5. ✅ Prepare hint/description
+
+### **After Adding Content:**
+1. ✅ Validate JSON syntax
+2. ✅ Test in game (play through)
+3. ✅ Check random selection works
+4. ✅ Verify points/scoring
+5. ✅ Get feedback from testers
+
+### **Maintenance:**
+1. 📅 Review questions quarterly
+2. 🔄 Update based on player feedback
+3. 📝 Document any changes
+4. 🧪 Regression test after updates
+5. 📊 Track question analytics (if available)
+
+---
+
+## 🚀 **QUICK REFERENCE**
+
+### **File Locations:**
+```bash
+questions.js          # Edit this file
+script.js             # Don't edit (game logic)
+index.html            # Don't edit (UI structure)
+styles.css            # Don't edit (styling)
+```
+
+### **Common Tasks:**
+
+**Add Quiz Question:**
+```javascript
+// In quiz pool array
+{
+    question: '...',
+    options: [
+        { text: '...', correct: true },
+        { text: '...', correct: false },
+        { text: '...', correct: false },
+        { text: '...', correct: false }
+    ],
+    hint: '...'
+}
+```
+
+**Add Timeline Set:**
+```javascript
+// In timeline pool array
+{
+    events: [
+        { id: 1, text: '...', year: XXXX, correctOrder: 0 },
+        { id: 2, text: '...', year: YYYY, correctOrder: 1 },
+        { id: 3, text: '...', year: ZZZZ, correctOrder: 2 }
+    ]
+}
+```
+
+**Add Map Question:**
+```javascript
+// In map.questions array
+{
+    id: X,
+    question: '...',
+    correctLocation: 'location_id',
+    points: 20
+}
+```
+
+**Add Legacy Card:**
+```javascript
+// In legacy_cards_finale.cards array
+{
+    id: X,
+    year: XXXX,
+    title: '...',
+    description: '...',
+    category: 'category_id'
+}
+```
+
+---
+
+## 📧 **SUPPORT**
+
+**Questions? Issues?**
+- Check this guide first
+- Test in game
+- Review examples in questions.js
+- Ask dev team if stuck
+
+**Contributing:**
+- Follow format strictly
+- Test thoroughly
+- Document changes
+- Submit for review
+
+---
+
+## 📝 **CHANGELOG**
+
+**Version 4.0 (Current):**
+- ✅ Added Map Challenge system (3 maps, 15 questions)
+- ✅ Added Legacy Cards finale (10 cards, 3 categories)
+- ❌ Removed Dice Challenge (replaced by Map)
+- ❌ Removed Story Builder (replaced by Legacy Cards)
+- ✅ Updated maxPoints: 1250 → 1300
+- ✅ Improved documentation
+
+**Version 3.0:**
+- Added Question Bank system
+- Added Dice Challenge
+- Added Story Builder finale
+- Random selection + shuffle
+
+**Version 2.0:**
+- Added Timeline Challenge
+- Improved Quiz format
+- Added Hint system
+
+**Version 1.0:**
+- Initial Quiz Challenge
+- Basic question format
+
+---
+
+**💡 Remember:** Content is king! Good questions = Great gameplay!
+
+**📚 Happy content creating!** 🎓✨
+
+---
+
+**Version:** 4.0  
+**Last Updated:** December 2024  
+**Maintained by:** Content Team

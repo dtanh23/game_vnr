@@ -149,7 +149,9 @@ body {
     background: var(--panel-bg);
     padding: 48px;
     border-radius: 16px;
-    max-width: 600px;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow-y: auto;
     box-shadow: var(--shadow);
 }
 
@@ -178,6 +180,38 @@ body {
 .instruction-item p {
     font-size: 1.2rem;
     line-height: 1.6;
+    margin: 0;
+}
+
+.instruction-section {
+    margin-bottom: 32px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 2px solid rgba(218, 37, 29, 0.2);
+}
+
+.instruction-section:last-of-type {
+    margin-bottom: 24px;
+}
+
+.instruction-section h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+
+
+.instruction-section .instruction-item {
+    margin-bottom: 12px;
+}
+
+.instruction-section .instruction-item:last-child {
+    margin-bottom: 0;
 }
 
 /* ==========================================
