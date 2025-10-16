@@ -288,7 +288,7 @@ const LOCATIONS = [
             video: null,
             audio: null
         },
-        achievement: { id: 'perfect', name: '🎯 Hoàn Hảo', desc: '1250/1250 điểm!' }
+        achievement: { id: 'perfect', name: '🎯 Hoàn Hảo', desc: '1300/1300 điểm!' }
     }
 ];
 
@@ -302,12 +302,14 @@ const ACHIEVEMENTS = {
     unifier: { unlocked: false, name: '🤝 Người Hợp Nhất', desc: 'Thống nhất tổ chức' },
     founder: { unlocked: false, name: '👑 Người Sáng Lập', desc: 'Hoàn thành hành trình' },
     speedrun: { unlocked: false, name: '⚡ Tốc Độ', desc: 'Hoàn thành < 3 phút' },
-    perfect: { unlocked: false, name: '🎯 Hoàn Hảo', desc: '1250/1250 điểm' }
+    perfect: { unlocked: false, name: '🎯 Hoàn Hảo', desc: '1300/1300 điểm' }
 };
 
 // ==========================================
 // GAME STATE
 // ==========================================
+
+const SPEEDRUN_TIME_LIMIT = 180; // 3 minutes in seconds
 
 const game = {
     canvas: null,
@@ -332,7 +334,9 @@ const game = {
     soundEnabled: true,
     // Movement
     moveInterval: null,
-    targetLocation: null
+    targetLocation: null,
+    // Audio
+    audioContext: null
 };
 
 // ==========================================
@@ -398,6 +402,23 @@ function showChallenge(location) {
     document.getElementById('map-challenge').style.display = 'none';
     document.getElementById('legacy-challenge').style.display = 'none';
     
+    // Clear all feedback
+    const quizFeedback = document.getElementById('quiz-feedback');
+    quizFeedback.textContent = '';
+    quizFeedback.className = 'quiz-feedback';
+    
+    const timelineFeedback = document.getElementById('timeline-feedback');
+    timelineFeedback.textContent = '';
+    timelineFeedback.className = 'timeline-feedback';
+    
+    const mapFeedback = document.getElementById('map-feedback');
+    mapFeedback.textContent = '';
+    mapFeedback.className = 'map-feedback';
+    
+    const legacyFeedback = document.getElementById('legacy-feedback');
+    legacyFeedback.textContent = '';
+    legacyFeedback.className = 'legacy-feedback';
+    
     // Show appropriate challenge type
     if (currentChallenge.type === 'quiz') {
         showQuizChallenge();
@@ -447,25 +468,27 @@ function showQuizChallenge() {
         const btn = document.createElement('button');
         btn.className = 'quiz-option';
         btn.textContent = `${String.fromCharCode(65 + index)}) ${option.text}`;
-        btn.onclick = () => checkQuizAnswer(option.correct);
+        btn.onclick = function() { checkQuizAnswer(option.correct, this); };
         optionsContainer.appendChild(btn);
     });
     
     // Clear feedback
-    document.getElementById('quiz-feedback').textContent = '';
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.textContent = '';
+    feedback.className = 'quiz-feedback';
 }
 
-function checkQuizAnswer(isCorrect) {
+function checkQuizAnswer(isCorrect, buttonElement) {
     const feedback = document.getElementById('quiz-feedback');
-    
+
     if (isCorrect) {
         feedback.textContent = '✅ Chính xác! Bạn đã vượt qua thử thách!';
         feedback.className = 'quiz-feedback correct';
-        
+
         if (game.soundEnabled) {
             playSound('achievement');
         }
-        
+
         setTimeout(() => {
             closeChallengeModal();
             onChallengeSuccess();
@@ -473,10 +496,12 @@ function checkQuizAnswer(isCorrect) {
     } else {
         feedback.textContent = '❌ Sai rồi! Hãy thử lại hoặc sử dụng gợi ý.';
         feedback.className = 'quiz-feedback incorrect';
-        
+
         // Disable the wrong option
-        event.target.disabled = true;
-        event.target.style.opacity = '0.5';
+        if (buttonElement) {
+            buttonElement.disabled = true;
+            buttonElement.style.opacity = '0.5';
+        }
     }
 }
 
@@ -561,7 +586,9 @@ function showTimelineChallenge() {
     });
     
     // Clear feedback
-    document.getElementById('timeline-feedback').textContent = '';
+    const feedback = document.getElementById('timeline-feedback');
+    feedback.textContent = '';
+    feedback.className = 'timeline-feedback';
 }
 
 function getDragAfterElement(container, y) {
@@ -867,7 +894,9 @@ function showLegacyCardsChallenge() {
     });
     
     // Clear feedback
-    document.getElementById('legacy-feedback').textContent = '';
+    const feedback = document.getElementById('legacy-feedback');
+    feedback.textContent = '';
+    feedback.className = 'legacy-feedback';
 }
 
 function checkLegacyCards() {
@@ -1088,10 +1117,16 @@ function showStory(location) {
         img.src = location.story.image;
         img.alt = location.story.imageAlt || location.name;
         img.style.display = 'block';
-        
+
         // Add loading animation
         img.onload = () => {
             img.style.animation = 'fadeIn 0.5s ease';
+        };
+
+        // Handle image load error
+        img.onerror = () => {
+            console.error('Failed to load image:', location.story.image);
+            img.style.display = 'none';
         };
     }
     
@@ -1140,9 +1175,10 @@ function closeStoryModal() {
 function continueJourney() {
     closeStoryModal();
     updateLocationInfo('Chọn địa điểm tiếp theo...');
-    
-    // Check if game completed
-    if (game.currentLocation === LOCATIONS.length - 1) {
+
+    // Check if all locations have been visited (game completed)
+    const allVisited = LOCATIONS.every(loc => loc.visited);
+    if (allVisited) {
         setTimeout(showVictoryScreen, 500);
     }
 }
@@ -1190,8 +1226,8 @@ function checkSpecialAchievements() {
         unlockAchievement('traveler');
     }
     
-    // Perfect: 1250 points (all locations completed)
-    if (game.totalPoints >= 1250) {
+    // Perfect: 1300 points (all locations completed with full score)
+    if (game.totalPoints >= 1300) {
         unlockAchievement('perfect');
     }
     
@@ -1199,7 +1235,7 @@ function checkSpecialAchievements() {
     const allVisited = LOCATIONS.every(loc => loc.visited);
     if (allVisited && game.startTime) {
         const timeElapsed = (Date.now() - game.startTime) / 1000; // seconds
-        if (timeElapsed < 180) { // 3 minutes = 180 seconds
+        if (timeElapsed < SPEEDRUN_TIME_LIMIT) {
             unlockAchievement('speedrun');
         }
     }
@@ -1619,9 +1655,9 @@ function drawCompass(ctx) {
 function showVictoryScreen() {
     game.endTime = Date.now();
     const playTime = Math.floor((game.endTime - game.startTime) / 1000);
-    
+
     // Check speedrun achievement
-    if (playTime < 180) { // 3 minutes
+    if (playTime < SPEEDRUN_TIME_LIMIT) {
         unlockAchievement('speedrun');
     }
     
@@ -1708,26 +1744,35 @@ const sounds = {
 };
 
 function initSounds() {
+    // Create single audio context for reuse
+    if (!game.audioContext) {
+        game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
     // Create audio contexts
     sounds.bgMusic = new Audio();
     sounds.bgMusic.loop = true;
     sounds.bgMusic.volume = 0.3;
-    
+
     // You can add your own audio files here
     // sounds.bgMusic.src = 'assets/audio/background.mp3';
 }
 
 function playSound(type) {
     if (!game.soundEnabled) return;
-    
-    // Simple beep sounds using Web Audio API
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Reuse audio context
+    if (!game.audioContext) {
+        game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    const audioContext = game.audioContext;
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
+
     // Different sounds for different events
     if (type === 'unlock') {
         oscillator.frequency.value = 800;
@@ -1739,6 +1784,11 @@ function playSound(type) {
         gainNode.gain.value = 0.3;
         oscillator.start();
         oscillator.stop(audioContext.currentTime + 0.2);
+    } else if (type === 'correct') {
+        oscillator.frequency.value = 1000;
+        gainNode.gain.value = 0.2;
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.15);
     }
 }
 
